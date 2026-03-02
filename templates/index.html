@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SHL Assessment Recommendation Engine</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>SHL Assessment Recommendation Engine</h1>
+
+<textarea id="query" placeholder="Paste Job Description here..."></textarea>
+<br>
+<button onclick="recommend()">Recommend Assessments</button>
+
+<h2>Recommended Bundle</h2>
+<div id="bundle"></div>
+
+<h2>Top Recommendations</h2>
+<div id="results"></div>
+
+<script>
+async function recommend() {
+    const query = document.getElementById("query").value;
+
+    const response = await fetch("/recommend", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({query: query, top_k: 5})
+    });
+
+    const data = await response.json();
+
+    const bundleDiv = document.getElementById("bundle");
+    const resultsDiv = document.getElementById("results");
+
+    bundleDiv.innerHTML = "";
+    resultsDiv.innerHTML = "";
+
+    if (data.recommended_bundle) {
+        for (const [type, item] of Object.entries(data.recommended_bundle)) {
+            bundleDiv.innerHTML += `<p><b>${type}:</b> <a href="${item.url}" target="_blank">${item.name}</a></p>`;
+        }
+    }
+
+    data.top_recommendations.forEach(item => {
+        resultsDiv.innerHTML += `
+            <div class="card">
+                <h3>${item.name}</h3>
+                <p><b>Type:</b> ${item.assessment_type}</p>
+                <p><b>Confidence:</b> ${item.confidence_score}</p>
+                <p>${item.reason}</p>
+                <a href="${item.url}" target="_blank">View Assessment</a>
+            </div>
+        `;
+    });
+}
+</script>
+
+</body>
+</html>

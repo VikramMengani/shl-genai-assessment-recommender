@@ -1,0 +1,19 @@
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Model and index files
+data/faiss_index.bin
+data/documents.json
+data/raw_catalog_links.json
+data/final_catalog.json
+
+# HuggingFace cache
+.cache/
+
+# System files
+.DS_Store
+Thumbs.db
