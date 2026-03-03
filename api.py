@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import traceback
 
@@ -6,7 +7,14 @@ app = FastAPI(
     title="SHL Assessment Recommendation Engine",
     version="6.0"
 )
-
+# Enable CORS (Required for Swagger & frontend)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all domains
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # -------------------------------------------------
 # Lazy Load Hybrid Search
 # -------------------------------------------------
